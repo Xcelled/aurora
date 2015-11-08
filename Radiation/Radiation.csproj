@@ -62,6 +62,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Assembly.cs" />
+    <Compile Include="CecilHelpers.cs" />
     <Compile Include="Patch.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
