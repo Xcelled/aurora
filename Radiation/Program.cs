@@ -38,6 +38,10 @@ namespace Radiation
 		{
 			Console.Title = "☢ Radiation ☢";
             PrintLogo();
+
+			Console.Write("Reading ChannelServer.exe ...");
+			var channelServer = 
+
 			Console.ReadKey();
 		}
 
