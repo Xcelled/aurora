@@ -40,10 +40,17 @@ namespace Radiation
 			Console.Title = "☢ Radiation ☢";
             PrintLogo();
 
+			Environment.CurrentDirectory = @"D:\Documents\Programming\Visual Studio\Projects\aura\bin\Debug\";
+
 			var shared = new SharedAssembly();
-			shared.Load(@"D:\Documents\Programming\Visual Studio\Projects\aura\bin\Debug\Shared2.dll");
+			shared.Load("Shared2.dll");
 			shared.Patch();
-			shared.Save(@"D:\Documents\Programming\Visual Studio\Projects\aura\bin\Debug\Shared.dll");
+			shared.Save("Shared.dll");
+
+			var channel = new ChannelServerAssembly();
+			channel.Load("ChannelServer2.exe");
+			channel.Patch();
+			channel.Save("ChannelServer.exe");
 
 			Console.ReadKey();
 		}

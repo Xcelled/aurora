@@ -64,6 +64,8 @@
     <Compile Include="Assembly.cs" />
     <Compile Include="CecilHelpers.cs" />
     <Compile Include="Patch.cs" />
+    <Compile Include="Patches\ChannelServerAssembly.cs" />
+    <Compile Include="Patches\ChannelServer\GmCommandVirtualizationPatch.cs" />
     <Compile Include="Patches\SharedAssembly.cs" />
     <Compile Include="Patches\Shared\WriteHeaderPatch.cs" />
     <Compile Include="Program.cs" />
