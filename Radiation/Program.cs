@@ -43,12 +43,12 @@ namespace Radiation
 			Environment.CurrentDirectory = @"D:\Documents\Programming\Visual Studio\Projects\aura\bin\Debug\";
 
 			var shared = new SharedAssembly();
-			shared.Load("Shared2.dll");
+			shared.Load("Shared.dll");
 			shared.Patch();
 			shared.Save("Shared.dll");
 
 			var channel = new ChannelServerAssembly();
-			channel.Load("ChannelServer2.exe");
+			channel.Load("ChannelServer.exe");
 			channel.Patch();
 			channel.Save("ChannelServer.exe");
 
