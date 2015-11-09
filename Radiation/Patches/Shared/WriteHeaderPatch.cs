@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using Mono.Cecil;
@@ -21,8 +22,7 @@ namespace Radiation.Patches.Shared
 
 			method.Body.SimplifyMacros();
 
-			var bylineWrite = method.Body.Instructions
-			                        .First(i => i.OpCode == OpCodes.Ldstr && i.Operand.ToString().Contains("by the"));
+			var bylineWrite = method.Body.Instructions.First(i => i.OpCode == OpCodes.Ldstr && i.Operand.ToString().Contains("by the"));
 
 			do
 			{
@@ -30,16 +30,13 @@ namespace Radiation.Patches.Shared
 			} while (!bylineWrite.Operand.ToString().Contains("System.Console::Write"));
 
 			var il = method.Body.GetILProcessor();
-			var consoleWrite = typeof(Console).GetMethod("Write", new[] { typeof(string) });
 
-			var setYellow = il.Create(OpCodes.Ldc_I4, (int)ConsoleColor.Yellow);
-			var callSet = il.Create(OpCodes.Call, method.Module.Import(typeof(Console).GetMethod("set_ForegroundColor")));
-			var ldStr = il.Create(OpCodes.Ldstr, "                            == RADIATION Edition ==                             ");
-
-			il.InsertAfter(bylineWrite, il.Create(bylineWrite.OpCode, method.Module.Import(consoleWrite)));
-			il.InsertAfter(bylineWrite, ldStr);
-			il.InsertAfter(bylineWrite, callSet);
-			il.InsertAfter(bylineWrite, setYellow);
+			il.InsertAfter(bylineWrite,
+				il.Create(OpCodes.Ldc_I4, (int)ConsoleColor.Yellow),
+				il.Create(OpCodes.Call, module.Resolve(typeof(Console), "set_ForegroundColor")),
+				il.Create(OpCodes.Ldstr, "                            == RADIATION Edition ==                             "),
+				il.Create(OpCodes.Call, module.Resolve(typeof(Console), "Write", typeof(string)))
+			);
 
 			method.Body.OptimizeMacros();
 		}
