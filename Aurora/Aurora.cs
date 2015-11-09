@@ -3,7 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Aura.Channel;
 using Aura.Channel.Scripting.Scripts;
+using Aura.Channel.Util;
+using Aura.Shared.Util;
+using Aurora.Commands;
 
 namespace Aurora
 {
@@ -67,6 +71,12 @@ namespace Aurora
 		public override void Load()
 		{
 			PrintLogo();
+
+			var prop = typeof(ChannelServer).GetProperty("CommandProcessor");
+			var originalProc = prop.GetValue(ChannelServer.Instance) as GmCommandManager;
+			prop.SetValue(ChannelServer.Instance, new AuroraCommandManager(originalProc));
+
+			Log.Info("CommandProc patched");
 		}
     }
 }

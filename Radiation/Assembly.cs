@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Mono.Cecil;
+using Mono.Cecil.Pdb;
 
 namespace Radiation
 {
@@ -23,7 +25,17 @@ namespace Radiation
 		public void Load(string path)
 		{
 			Console.WriteLine($"Loading {Name} from {path}");
-			Module = ModuleDefinition.ReadModule(path);
+
+			var readerParameters = new ReaderParameters();
+
+			if (File.Exists(Path.ChangeExtension(path, "pdb")))
+			{
+				readerParameters.SymbolReaderProvider = new PdbReaderProvider();
+				readerParameters.ReadSymbols = true;
+			}
+
+			Module = ModuleDefinition.ReadModule(path, readerParameters);
+
 			Console.WriteLine($"{Name} loaded");
 		}
 
@@ -40,7 +52,16 @@ namespace Radiation
 		public void Save(string path)
 		{
 			Console.WriteLine($"Saving {Name} to {path}");
-			Module.Write(path);
+
+			var writerParameters = new WriterParameters();
+
+			if (File.Exists(Path.ChangeExtension(path, "pdb")))
+			{
+				writerParameters.WriteSymbols = true;
+			}
+
+			Module.Write(path, writerParameters);
+
 			Console.WriteLine($"{Name} saved");
 		}
 	}
