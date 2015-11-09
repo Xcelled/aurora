@@ -59,6 +59,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Aurora.cs" />
+    <Compile Include="Commands\ArgumentTokenizer.cs" />
     <Compile Include="Commands\AuroraCommandManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
