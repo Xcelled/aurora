@@ -22,7 +22,9 @@ namespace Radiation
 
 		public void Load(string path)
 		{
+			Console.WriteLine($"Loading {Name} from {path}");
 			Module = ModuleDefinition.ReadModule(path);
+			Console.WriteLine($"{Name} loaded");
 		}
 
 		public void Patch()
@@ -37,7 +39,9 @@ namespace Radiation
 
 		public void Save(string path)
 		{
+			Console.WriteLine($"Saving {Name} to {path}");
 			Module.Write(path);
+			Console.WriteLine($"{Name} saved");
 		}
 	}
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Radiation.Patches;
 
 namespace Radiation
 {
@@ -39,8 +40,10 @@ namespace Radiation
 			Console.Title = "☢ Radiation ☢";
             PrintLogo();
 
-			Console.Write("Reading ChannelServer.exe ...");
-			var channelServer = 
+			var shared = new SharedAssembly();
+			shared.Load(@"D:\Documents\Programming\Visual Studio\Projects\aura\bin\Debug\Shared2.dll");
+			shared.Patch();
+			shared.Save(@"D:\Documents\Programming\Visual Studio\Projects\aura\bin\Debug\Shared.dll");
 
 			Console.ReadKey();
 		}
