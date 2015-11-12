@@ -33,7 +33,7 @@ namespace Aurora.Commands
 		public bool CanBeTargeted => TargertAuth > 0;
 
 		protected Command(string name, int selfAuth = 99, int targetAuth = 99, string namePattern = null)
-			: this(name, new Regex($"^{namePattern ?? name}$", RegexOptions.CultureInvariant | RegexOptions.IgnoreCase), selfAuth, targetAuth)
+			: this(name, new Regex(namePattern ?? $"^{name}$", RegexOptions.CultureInvariant | RegexOptions.IgnoreCase), selfAuth, targetAuth)
 		{
 		}
 
