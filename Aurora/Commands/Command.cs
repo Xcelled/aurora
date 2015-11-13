@@ -12,18 +12,12 @@ using Aura.Shared.Util;
 
 namespace Aurora.Commands
 {
-	internal interface ICommand
-	{
-		bool IsNameMatch(string name);
-		void Execute(ChannelClient client, Creature sender, Creature target, IEnumerable<string> args);
-	}
-
-	internal abstract class Command : ICommand
+	internal abstract class Command
 	{
 		private readonly int _defaultSelfAuth;
 		private readonly int _defaultTargetAuth;
-		protected readonly Regex NamePatternRegex;
 		public string Name { get; }
+		public string Description { get; }
 
 		public int SelfAuth => ChannelServer.Instance.Conf.Commands.GetAuth(Name, _defaultSelfAuth, _defaultTargetAuth).Auth;
 
@@ -32,31 +26,23 @@ namespace Aurora.Commands
 
 		public bool CanBeTargeted => TargertAuth > 0;
 
-		protected Command(string name, int selfAuth = 99, int targetAuth = 99, string namePattern = null)
-			: this(name, new Regex(namePattern ?? $"^{name}$", RegexOptions.CultureInvariant | RegexOptions.IgnoreCase), selfAuth, targetAuth)
-		{
-		}
-
-		protected Command(string name, Regex namePattern, int selfAuth = 99, int targetAuth = 99)
+		protected Command(string name, string description, int selfAuth = 99, int targetAuth = 99)
 		{
 			Name = name;
+			Description = description;
 			_defaultSelfAuth = selfAuth;
 			_defaultTargetAuth = targetAuth;
-			NamePatternRegex = namePattern;
 		}
 
-		public virtual void Execute(ChannelClient client, Creature sender, Creature target, IEnumerable<string> args)
+		public abstract void Execute(ChannelClient client, Creature sender, Creature target, IList<string> args);
+
+		protected void EnsureCanExecute(Creature sender, Creature target)
 		{
 			var isSelfCommand = sender == target;
 			EnsureAuth(sender, isSelfCommand);
 
 			if (isSelfCommand)
 				EnsureTargeted();
-		}
-
-		public bool IsNameMatch(string name)
-		{
-			return NamePatternRegex.IsMatch(name);
 		}
 
 		protected bool HasAuth(Creature invoker, bool isSelfCommand)
