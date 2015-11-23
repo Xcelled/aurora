@@ -12,20 +12,18 @@ namespace Aurora.Commands.Global
 	internal class DirCommand : Command
 	{
 		private readonly CommandNamespace _ns;
-		private readonly string _trimPattern;
 
-		public DirCommand(CommandNamespace ns, string trimPattern = ".?", int selfAuth = 0, int targetAuth = 50)
-			:base("Dir", "Lists all members of the given namespace", selfAuth, targetAuth)
+		public DirCommand(CommandNamespace ns, int selfAuth = 0, int targetAuth = 50)
+			: base("?", "Lists all members of the given namespace", selfAuth, targetAuth, true)
 		{
 			_ns = ns;
-			_trimPattern = trimPattern;
 		}
 
 		public override void Execute(ChannelClient client, Creature sender, Creature target, IList<string> args)
 		{
-			Send.ServerMessage(target, "Listing of {0}:", args[0].TrimEnd(_trimPattern.ToCharArray()));
-			Send.ServerMessage(target, "Namespaces: {0}", string.Join(", ", _ns.Namespaces.Select(n => n.Key)));
-			Send.ServerMessage(target, "Commands: {0}", string.Join(", ", _ns.Commands.Select(n => n.Key)));
+			Send.ServerMessage(target, "Listing of '{0}':", _ns.FullyQualifiedName);
+			Send.ServerMessage(target, "Namespaces: {0}", string.Join(", ", _ns.Namespaces.Where(n => !n.Hide).Select(n => n.Name)));
+			Send.ServerMessage(target, "Commands: {0}", string.Join(", ", _ns.Commands.Where(n => !n.Hide && n.HasAuth(target, false)).Select(n => n.Name)));
 		}
 	}
 }

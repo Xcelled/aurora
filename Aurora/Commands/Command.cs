@@ -12,12 +12,10 @@ using Aura.Shared.Util;
 
 namespace Aurora.Commands
 {
-	internal abstract class Command
+	internal abstract class Command : CommandHeirarchyElement
 	{
 		private readonly int _defaultSelfAuth;
 		private readonly int _defaultTargetAuth;
-		public string Name { get; }
-		public string Description { get; }
 
 		public int SelfAuth => ChannelServer.Instance.Conf.Commands.GetAuth(Name, _defaultSelfAuth, _defaultTargetAuth).Auth;
 
@@ -26,10 +24,13 @@ namespace Aurora.Commands
 
 		public bool CanBeTargeted => TargertAuth > 0;
 
-		protected Command(string name, string description, int selfAuth = 99, int targetAuth = 99)
+		protected Command(string name, Command other)
+			: this(name, other.Description, other._defaultSelfAuth, other._defaultTargetAuth, other.Hide)
+		{ }
+
+		protected Command(string name, string description, int selfAuth = 99, int targetAuth = 99, bool hide = false)
+			: base(name, description, $"^{Regex.Escape(name)}$", hide)
 		{
-			Name = name;
-			Description = description;
 			_defaultSelfAuth = selfAuth;
 			_defaultTargetAuth = targetAuth;
 		}
@@ -41,11 +42,11 @@ namespace Aurora.Commands
 			var isSelfCommand = sender == target;
 			EnsureAuth(sender, isSelfCommand);
 
-			if (isSelfCommand)
+			if (!isSelfCommand)
 				EnsureTargeted();
 		}
 
-		protected bool HasAuth(Creature invoker, bool isSelfCommand)
+		public bool HasAuth(Creature invoker, bool isSelfCommand)
 		{
 			var req = isSelfCommand ? SelfAuth : TargertAuth;
 			return req < invoker.Client.Account?.Authority;
@@ -65,6 +66,11 @@ namespace Aurora.Commands
 			{
 				throw new Exception(string.Format(Localization.Get("Command '{0}' cannot be used on another character."), Name));
 			}
+		}
+
+		public override IEnumerable<string> GetHelp()
+		{
+			yield return $"Command {Name} - {Description}";
 		}
 	}
 }

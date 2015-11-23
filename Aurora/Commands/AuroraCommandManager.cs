@@ -10,6 +10,7 @@ using Aura.Channel.Util;
 using Aura.Channel.Util.Configuration.Files;
 using Aura.Channel.World.Entities;
 using Aura.Shared.Util;
+using Aurora.Commands.Global;
 
 namespace Aurora.Commands
 {
@@ -27,8 +28,8 @@ namespace Aurora.Commands
 
 			GlobalNamespace = new CommandNamespace("Global", "Root Namespace")
 			{
-
-				{ @"^char\.", new CommandNamespace("Character", "Commands relating to characters") }
+				new HelpCommand(),
+				new CommandNamespace("char", "Commands relating to characters")
 			};
 		}
 

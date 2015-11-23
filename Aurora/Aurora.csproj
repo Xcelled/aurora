@@ -66,8 +66,11 @@
     <Compile Include="Commands\ArgumentTokenizer.cs" />
     <Compile Include="Commands\AuroraCommandManager.cs" />
     <Compile Include="Commands\Command.cs" />
+    <Compile Include="Commands\CommandAlias.cs" />
+    <Compile Include="Commands\CommandHeirarchyElement.cs" />
     <Compile Include="Commands\CommandNamespace.cs" />
     <Compile Include="Commands\Global\DirCommand.cs" />
+    <Compile Include="Commands\Global\HelpCommand.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
